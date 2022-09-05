@@ -31,7 +31,7 @@ public class ValidationHandler extends ResponseEntityExceptionHandler {
         MoneyTransferResponse moneyTransferResponse = new MoneyTransferResponse();
         moneyTransferResponse.setTransactionMessage(ex.getMessage());
         moneyTransferResponse.setTransactionStatus(Constants.FAILURE);
-        return new ResponseEntity<>(moneyTransferResponse, HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<>(moneyTransferResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = MoneyTransferApiException.class)
@@ -39,7 +39,7 @@ public class ValidationHandler extends ResponseEntityExceptionHandler {
         MoneyTransferResponse moneyTransferResponse = new MoneyTransferResponse();
         moneyTransferResponse.setTransactionMessage(ex.getMessage());
         moneyTransferResponse.setTransactionStatus(Constants.FAILURE);
-        return new ResponseEntity<>(moneyTransferResponse, HttpStatus.EXPECTATION_FAILED);
+        return new ResponseEntity<>(moneyTransferResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = Exception.class)
@@ -47,7 +47,7 @@ public class ValidationHandler extends ResponseEntityExceptionHandler {
         MoneyTransferResponse moneyTransferResponse = new MoneyTransferResponse();
         moneyTransferResponse.setTransactionMessage(Constants.ERROR_MSG_UNEXPECTED);
         moneyTransferResponse.setTransactionStatus(Constants.FAILURE);
-        return new ResponseEntity<>(moneyTransferResponse, HttpStatus.EXPECTATION_FAILED);
+        return new ResponseEntity<>(moneyTransferResponse, HttpStatus.CONFLICT);
     }
 
 }
