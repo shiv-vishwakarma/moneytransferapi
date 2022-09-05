@@ -15,8 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.*;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.*;
 
 import java.util.Map;
 
@@ -75,10 +74,10 @@ class MoneytransferapiApplicationTests {
         try {
             ResponseEntity<BankAccountDetails> response = restTemplate.getForEntity(baseUrl.concat("/fetchAccDetailByCustId/{custId}"), BankAccountDetails.class, "CUST10001");
         } catch (Exception e) {
-            String responseString = ((HttpClientErrorException.NotAcceptable) e).getResponseBodyAsString();
+            String responseString = ((HttpClientErrorException.BadRequest) e).getResponseBodyAsString();
             Map<String,String> result = mapper.readValue(responseString, Map.class);
             Assertions.assertAll(
-                    () -> Assertions.assertEquals(HttpStatus.NOT_ACCEPTABLE, ((HttpClientErrorException.NotAcceptable) e).getStatusCode()),
+                    () -> Assertions.assertEquals(HttpStatus.BAD_REQUEST, ((HttpClientErrorException.BadRequest) e).getStatusCode()),
                     () -> Assertions.assertEquals(Constants.FAILURE, result.get("transactionStatus"))
             );
         }
@@ -118,10 +117,10 @@ class MoneytransferapiApplicationTests {
         try {
             ResponseEntity<MoneyTransferResponse> response = restTemplate.exchange(baseUrl.concat("/fundTransfer"), HttpMethod.POST, new HttpEntity(moneyTransferRequest,new HttpHeaders()), MoneyTransferResponse.class);
         } catch (Exception e) {
-            String responseString = ((HttpClientErrorException.NotAcceptable) e).getResponseBodyAsString();
+            String responseString = ((HttpClientErrorException.BadRequest) e).getResponseBodyAsString();
             Map<String,String> result = mapper.readValue(responseString, Map.class);
             Assertions.assertAll(
-                    () -> Assertions.assertEquals(HttpStatus.NOT_ACCEPTABLE, ((HttpClientErrorException.NotAcceptable) e).getStatusCode()),
+                    () -> Assertions.assertEquals(HttpStatus.BAD_REQUEST, ((HttpClientErrorException.BadRequest) e).getStatusCode()),
                     () -> Assertions.assertEquals(Constants.FAILURE, result.get("transactionStatus")),
                     () -> Assertions.assertEquals(Constants.ERROR_MSG_SAME_ACCOUNTS, result.get("transactionMessage")),
                     () -> Assertions.assertNull(result.get("transactionRefId"))

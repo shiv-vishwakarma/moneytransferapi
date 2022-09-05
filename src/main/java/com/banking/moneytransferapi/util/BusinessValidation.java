@@ -17,12 +17,6 @@ public class BusinessValidation {
 
     public void performBusinessValidations(MoneyTransferRequest moneyTransferRequest) {
 
-        //Check if FROM ACCOUNT is present in database
-        bankAccountDetailsRepo.findByAccountNumber(moneyTransferRequest.getFromAccountNumber()).orElseThrow(() -> new BusinessValidationException(Constants.ERROR_MSG_FROM_ACCOUNT));
-
-        //Check if FROM ACCOUNT is present in database
-        bankAccountDetailsRepo.findByAccountNumber(moneyTransferRequest.getToAccountNumber()).orElseThrow(() -> new BusinessValidationException(Constants.ERROR_MSG_TO_ACCOUNT));
-
         //Check if both account numbers are not same
         if(moneyTransferRequest.getFromAccountNumber().equalsIgnoreCase(moneyTransferRequest.getToAccountNumber())){
             throw new BusinessValidationException(Constants.ERROR_MSG_SAME_ACCOUNTS);
@@ -33,5 +27,11 @@ public class BusinessValidation {
         if (bankAccountDetails.get().getAccountBalance() < moneyTransferRequest.getAmount()){
             throw new BusinessValidationException(Constants.ERROR_MSG_INSUFFICIENT_BAL);
         }
+
+        //Check if FROM ACCOUNT is present in database
+        bankAccountDetailsRepo.findByAccountNumber(moneyTransferRequest.getFromAccountNumber()).orElseThrow(() -> new BusinessValidationException(Constants.ERROR_MSG_FROM_ACCOUNT));
+
+        //Check if FROM ACCOUNT is present in database
+        bankAccountDetailsRepo.findByAccountNumber(moneyTransferRequest.getToAccountNumber()).orElseThrow(() -> new BusinessValidationException(Constants.ERROR_MSG_TO_ACCOUNT));
     }
 }
