@@ -30,6 +30,7 @@ class MoneytransferapiApplicationTests {
     private String baseUrl = "http://localhost";
 
     private static RestTemplate restTemplate;
+    private static  ObjectMapper mapper;
 
     @Autowired
     private TestH2Repo testH2Repo;
@@ -37,6 +38,7 @@ class MoneytransferapiApplicationTests {
     @BeforeAll
     public static void init() {
         restTemplate = new RestTemplate();
+        mapper = new ObjectMapper();
     }
 
     @BeforeEach
@@ -73,7 +75,6 @@ class MoneytransferapiApplicationTests {
         try {
             ResponseEntity<BankAccountDetails> response = restTemplate.getForEntity(baseUrl.concat("/fetchAccDetailByCustId/{custId}"), BankAccountDetails.class, "CUST10001");
         } catch (Exception e) {
-            ObjectMapper mapper = new ObjectMapper();
             String responseString = ((HttpClientErrorException.NotAcceptable) e).getResponseBodyAsString();
             Map<String,String> result = mapper.readValue(responseString, Map.class);
             Assertions.assertAll(
@@ -117,7 +118,6 @@ class MoneytransferapiApplicationTests {
         try {
             ResponseEntity<MoneyTransferResponse> response = restTemplate.exchange(baseUrl.concat("/fundTransfer"), HttpMethod.POST, new HttpEntity(moneyTransferRequest,new HttpHeaders()), MoneyTransferResponse.class);
         } catch (Exception e) {
-            ObjectMapper mapper = new ObjectMapper();
             String responseString = ((HttpClientErrorException.NotAcceptable) e).getResponseBodyAsString();
             Map<String,String> result = mapper.readValue(responseString, Map.class);
             Assertions.assertAll(
@@ -134,7 +134,6 @@ class MoneytransferapiApplicationTests {
         try {
             MoneyTransferResponse response = restTemplate.postForObject(baseUrl.concat("/fundTransfer"), new MoneyTransferRequest(), MoneyTransferResponse.class);
         } catch (Exception e) {
-            ObjectMapper mapper = new ObjectMapper();
             String responseString = ((HttpClientErrorException.BadRequest) e).getResponseBodyAsString();
             Map<String,String> result = mapper.readValue(responseString, Map.class);
             Assertions.assertAll(
