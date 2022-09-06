@@ -23,11 +23,11 @@ public class BusinessValidation {
         bankAccountDetailsRepo.findByAccountNumber(moneyTransferRequest.getFromAccountNumber()).ifPresentOrElse(bankAcc -> {
             if (bankAcc.getAccountBalance() < moneyTransferRequest.getAmount()){
                 throw new BusinessValidationException(Constants.ERROR_MSG_INSUFFICIENT_BAL);
+            }else {
+               // Check if FROM ACCOUNT is present in database
+                bankAccountDetailsRepo.findByAccountNumber(moneyTransferRequest.getToAccountNumber()).orElseThrow(() -> new BusinessValidationException(Constants.ERROR_MSG_TO_ACCOUNT));
             }
         }, () -> {throw new BusinessValidationException(Constants.ERROR_MSG_FROM_ACCOUNT);});
 
-
-        //Check if FROM ACCOUNT is present in database
-        bankAccountDetailsRepo.findByAccountNumber(moneyTransferRequest.getToAccountNumber()).orElseThrow(() -> new BusinessValidationException(Constants.ERROR_MSG_TO_ACCOUNT));
     }
 }
