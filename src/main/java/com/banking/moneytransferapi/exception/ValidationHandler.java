@@ -28,6 +28,7 @@ public class ValidationHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = BusinessValidationException.class)
     protected ResponseEntity<MoneyTransferResponse> handleBusinessValidationException(BusinessValidationException ex) {
+        log.info("BusinessValidation Failure");
         MoneyTransferResponse moneyTransferResponse = new MoneyTransferResponse();
         moneyTransferResponse.setTransactionMessage(ex.getMessage());
         moneyTransferResponse.setTransactionStatus(Constants.FAILURE);
@@ -42,6 +43,14 @@ public class ValidationHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(moneyTransferResponse, HttpStatus.BAD_REQUEST);
     }
 
+    /*@ExceptionHandler(value = DataIntegrityViolationException.class)
+    protected ResponseEntity<Object> handleSQLException(DataIntegrityViolationException ex) {
+        MoneyTransferResponse moneyTransferResponse = new MoneyTransferResponse();
+        moneyTransferResponse.setTransactionMessage("SQL EXCEPTION : " +ex.getClass() + " --> " +ex.getCause()+ " --> " +ex.getLocalizedMessage());
+        moneyTransferResponse.setTransactionStatus(Constants.FAILURE);
+        return new ResponseEntity<>(moneyTransferResponse, HttpStatus.CONFLICT);
+    }*/
+
     @ExceptionHandler(value = Exception.class)
     protected ResponseEntity<Object> handleAllException(Exception ex) {
         MoneyTransferResponse moneyTransferResponse = new MoneyTransferResponse();
@@ -49,5 +58,4 @@ public class ValidationHandler extends ResponseEntityExceptionHandler {
         moneyTransferResponse.setTransactionStatus(Constants.FAILURE);
         return new ResponseEntity<>(moneyTransferResponse, HttpStatus.CONFLICT);
     }
-
 }
